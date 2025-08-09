@@ -1,3 +1,14 @@
+FROM ubuntu/python:3.12-24.04_stable
+ENV PYTHONUNBUFFERED=TRUE
+COPY --chown=app:app requirements.txt ./
+RUN pip install -r requirements.txt
+COPY --chown=app:app . ./
+USER app
+CMD ["bash", "-c", "streamlit run main.py --server.port=$PORT"]
+
+##############################################
+# GDS Build Image
+##############################################
 # FROM gdssingapore/airbase:python-3.13
 # ENV PYTHONUNBUFFERED=TRUE
 # COPY --chown=app:app requirements.txt ./
@@ -6,9 +17,9 @@
 # USER app
 # CMD ["bash", "-c", "streamlit run main.py --server.port=$PORT"]
 
-# # comment here for build
-# # testing
-
+##############################################
+# Modify GDS Build Image to use Python 3.11
+##############################################
 # FROM gdssingapore/airbase:python-3.13
 # # 1. Install Python 3.11 alongside existing Python
 # RUN apt-get update && \
@@ -48,34 +59,3 @@
 
 # # 8. Run Streamlit
 # CMD ["bash", "-c", "python3.11 -m streamlit run app.py --server.port=$PORT"]
-
-# comment here for build
-# hope it works now
-
-
-FROM gdssingapore/airbase:python-3.13
-
-# 1. Install Python 3.11 and create virtual environment
-RUN apt-get update && \
-    apt-get install -y python3.11 python3.11-venv && \
-    python3.11 -m venv /opt/venv && \
-    /opt/venv/bin/python -m pip install --upgrade pip && \
-    apt-get clean
-
-# 2. Set environment variables
-ENV PYTHONUNBUFFERED=TRUE \
-    PATH="/opt/venv/bin:$PATH" 
-    # Add venv to PATH
-
-# 3. Install requirements in the virtual environment
-COPY --chown=app:app requirements.txt ./
-RUN pip install -r requirements.txt
-
-# 4. Copy application code
-COPY --chown=app:app . ./
-
-# 5. Switch to non-root user
-USER app
-
-# 6. Run Streamlit using the virtual environment's Python
-CMD ["bash", "-c", "streamlit run main.py --server.port=$PORT"]
