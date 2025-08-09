@@ -1,10 +1,13 @@
 FROM gdssingapore/airbase:python-3.13
 ENV PYTHONUNBUFFERED=TRUE
-COPY --chown=app:app requirements.txt ./
-RUN pip install -r requirements.txt
+RUN apt-get update && \
+    apt-get install -y python3.11 python3.11-dev python3.11-venv python3.11-distutils python3-pip && \
+    apt-get clean
+#COPY --chown=app:app requirements.txt ./
+#RUN pip install -r requirements.txt
 COPY --chown=app:app . ./
 USER app
-CMD ["bash", "-c", "streamlit run main.py --server.port=$PORT"]
+#CMD ["bash", "-c", "streamlit run main.py --server.port=$PORT"]
 
 ##############################################
 # Ubuntu Custom Build 3.11 Image
