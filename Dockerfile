@@ -1,4 +1,4 @@
-FROM ubuntu/python:3.12-24.04_stable
+FROM ubuntu:jammy
 
 # Install Python and basic shell utilities first
 RUN [ "/usr/bin/bash", "-c", "\
