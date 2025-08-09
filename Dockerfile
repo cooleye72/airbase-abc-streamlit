@@ -1,16 +1,10 @@
 FROM ubuntu:jammy
 
 # Install Python and basic shell utilities first
-RUN [ "/usr/bin/bash", "-c", "\
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-        python3.11 \
-        python3.11-venv \
-        python3.11-distutils \
-        bash && \
-    python3.11 -m ensurepip --upgrade && \
-    rm -rf /var/lib/apt/lists/* \
-    "]
+RUN apt-get update && \
+    apt-get install -y python3.11 python3.11-dev python3.11-venv python3.11-distutils python3-pip && \
+    apt-get clean
+    
 #Verify Python version
 RUN python --version && \
     python -m pip --version \
