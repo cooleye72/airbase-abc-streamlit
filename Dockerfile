@@ -1,4 +1,12 @@
 FROM ubuntu/python:3.12-24.04_stable
+RUN 
+#Verify Python version
+RUN python --version && \
+    python -m pip --version \
+    python3 --version && \
+    python3.11 --version && \
+    python3 -m pip --version
+
 ENV PYTHONUNBUFFERED=TRUE
 COPY --chown=app:app requirements.txt ./
 RUN pip install -r requirements.txt
