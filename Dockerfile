@@ -1,4 +1,11 @@
 FROM ubuntu/python:3.12-24.04_stable
+
+# Install Python and basic shell utilities first
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    python3 \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
 #Verify Python version
 RUN python --version && \
     python -m pip --version \
