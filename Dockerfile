@@ -4,13 +4,23 @@ RUN apt-get update && \
     apt-get install -y python3.11 python3.11-dev python3.11-venv python3.11-distutils python3-pip && \
     apt-get clean
 
-ENV PYTHON_VERSION=3.11.13
-RUN /bin/sh -c set -eux;
+# ENV PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# RUN /bin/sh -c set -eux;
+# ENV GPG_KEY=A035C8C19219BA821ECEA86B64E628F8D684696D
+# ENV PYTHON_VERSION=3.11.9
+# ENV PYTHON_SHA256=1f6e417b1d8718a5195a9c0a25f6c1c3b9a1b8b5b5e5e5e5e5e5e5e5e5e5e5e5
+# RUN /bin/sh -c set -eux;
+# RUN /bin/sh -c set -eux;
 
-RUN python3 --version && \
-    pip --version
-#COPY --chown=app:app requirements.txt ./
-#RUN pip install -r requirements.txt
+#Create and activate a Python 3.11 virtual environment
+RUN python3.11 -m venv /opt/venv311
+ENV PATH="/opt/venv311/bin:$PATH"
+
+RUN python --version
+RUN pip --version
+COPY --chown=app:app requirements.txt ./
+#RUN python3.11 -m pip install -r requirements.txt
+RUN pip install -r requirements.txt
 COPY --chown=app:app . ./
 USER app
 CMD ["bash", "-c", "streamlit run main.py --server.port=$PORT"]
