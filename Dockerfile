@@ -1,5 +1,4 @@
 FROM ubuntu/python:3.12-24.04_stable
-RUN 
 #Verify Python version
 RUN python --version && \
     python -m pip --version \
