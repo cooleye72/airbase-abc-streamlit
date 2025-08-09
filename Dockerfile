@@ -4,11 +4,9 @@ FROM ubuntu:jammy
 RUN apt-get update && \
     apt-get install -y python3.11 python3.11-dev python3.11-venv python3.11-distutils python3-pip && \
     apt-get clean
-    
+
 #Verify Python version
-RUN python --version && \
-    python -m pip --version \
-    python3 --version && \
+RUN python3 --version && \
     python3.11 --version && \
     python3 -m pip --version
 
