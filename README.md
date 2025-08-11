@@ -37,3 +37,7 @@ In your python3 file, include the following to enforce password checks:
 if not check_password():
     st.stop()
 ```
+
+
+sudo docker buildx build --platform linux/amd64 -t local.gdssingapore:python3.11 .
+
