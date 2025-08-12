@@ -1,4 +1,4 @@
-FROM gdssingapore/airbase:python-3.13 AS build-stage0
+FROM gdssingapore/airbase:python-3.13-builder AS build-stage0
 
 RUN apt-get update
 RUN apt-get -y install build-essential procps curl file git sudo
@@ -19,7 +19,7 @@ RUN echo "dockeruser ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/dockeruser && \
 
 USER dockeruser
 #RUN sudo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" 
+#RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" 
 
 # Install Homebrew and set the PATH in a single chained command
 RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && \
@@ -47,15 +47,19 @@ RUN export PATH="$(brew --prefix)/opt/python@3.11/libexec/bin:$PATH"
 
 RUN python3 --version
 RUN pip3 --version
-
+WORKDIR /app
 COPY --chown=dockeruser:dockeruser requirements.txt ./
-RUN pip3 install -r requirements.txt
+# RUN pip3 install -r requirements.txt
 
-FROM gdssingapore/airbase:python-3.13
+FROM gdssingapore/airbase:python-3.13-builder
+RUN useradd -m dockeruser
 USER dockeruser
-COPY --from=build-stage0 requirements.txt ./
+COPY --from=build-stage0 /home/linuxbrew/.linuxbrew/bin/* /home/linuxbrew/.linuxbrew/bin/
+RUN export PATH="/home/linuxbrew/.linuxbrew/opt/python@3.11/libexec/bin:$PATH"
+WORKDIR /app
+COPY --from=build-stage0 /app/requirements.txt ./
 COPY --chown=dockeruser:dockeruser . ./
-CMD ["bash", "-c", "python3 streamlit run main.py --server.port=$PORT"]
+# CMD ["bash", "-c", "python3 streamlit run main.py --server.port=$PORT"]
 # FROM gdssingapore/airbase:python-3.13
 # ENV PYTHONUNBUFFERED=TRUE
 # RUN apt-get update && \
